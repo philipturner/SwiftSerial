@@ -2,10 +2,8 @@ import Foundation
 
 /**
  A serial port to receive and transmit data.
-
- The serial port is implemented as an `actor`, which forces all calls to functions and properties to be called asynchronously, but also provides threat safety.
  */
-public actor SerialPort {
+public class SerialPort {
 
     /** The path of the serial port */
     public let path: String
