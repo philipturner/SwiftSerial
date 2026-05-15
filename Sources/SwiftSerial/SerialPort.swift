@@ -216,7 +216,11 @@ public class SerialPort {
 
         let bytesRead = read(fileDescriptor, buffer, count)
         if bytesRead < 0 {
-            fatalError("read had error: \(bytesRead) \(errno)")
+            if errno == EAGAIN {
+                return 0
+            } else {
+                fatalError("read had error: \(bytesRead) \(errno)")
+            }
         }
         return max(0, bytesRead)
     }
