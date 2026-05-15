@@ -262,6 +262,7 @@ public class SerialPort {
             if returnValue != data.count {
                 fatalError("write had error: \(returnValue) \(errno)")
             }
+            return returnValue
         }
     }
 
@@ -280,6 +281,7 @@ public class SerialPort {
             if returnValue != bytes.count {
                 fatalError("write had error: \(returnValue) \(errno)")
             }
+            return returnValue
         }
     }
 }
