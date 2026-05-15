@@ -277,7 +277,7 @@ public class SerialPort {
         }
         return bytes.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) in
             let returnValue = write(fileDescriptor, ptr.baseAddress, bytes.count)
-            if returnValue != data.count {
+            if returnValue != bytes.count {
                 fatalError("write had error:", returnValue, errno)
             }
         }
