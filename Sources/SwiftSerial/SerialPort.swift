@@ -205,12 +205,18 @@ public class SerialPort {
         }
 
         var s: stat = stat()
-        fstat(fileDescriptor, &s)
+        let fStatReturn = fstat(fileDescriptor, &s)
         if s.st_nlink != 1 {
             throw SerialError.deviceNotConnected
         }
+        if fStatReturn != 0 {
+            fatalError("fstat had error: \(fStatReturn) \(errno)")
+        }
 
         let bytesRead = read(fileDescriptor, buffer, count)
+        if bytesRead < 0 {
+            fatalError("read had error: \(fStatReturn) \(errno)")
+        }
         return max(0, bytesRead)
     }
 
