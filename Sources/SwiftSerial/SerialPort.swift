@@ -53,6 +53,7 @@ public class SerialPort {
         } else {
             throw SerialError.mustReceiveOrTransmit
         }
+        readWriteParam |= O_NONBLOCK
 
         fileDescriptor = openPort(path: path, readWriteParam: readWriteParam)
 
@@ -210,12 +211,12 @@ public class SerialPort {
             throw SerialError.deviceNotConnected
         }
         if fStatReturn != 0 {
-            fatalError("fstat had error: \(fStatReturn) \(errno)")
+            fatalError("fstat had error:", fStatReturn, errno)
         }
 
         let bytesRead = read(fileDescriptor, buffer, count)
         if bytesRead < 0 {
-            fatalError("read had error: \(fStatReturn) \(errno)")
+            fatalError("read had error:", bytesRead, errno)
         }
         return max(0, bytesRead)
     }
@@ -257,7 +258,10 @@ public class SerialPort {
             throw SerialError.portIsClosed
         }
         return data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) in
-            write(fileDescriptor, ptr.baseAddress, data.count)
+            let returnValue = write(fileDescriptor, ptr.baseAddress, data.count)
+            if returnValue != data.count {
+                fatalError("write had error:", returnValue, errno)
+            }
         }
     }
 
@@ -272,7 +276,10 @@ public class SerialPort {
             throw SerialError.portIsClosed
         }
         return bytes.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) in
-            write(fileDescriptor, ptr.baseAddress, bytes.count)
+            let returnValue = write(fileDescriptor, ptr.baseAddress, bytes.count)
+            if returnValue != data.count {
+                fatalError("write had error:", returnValue, errno)
+            }
         }
     }
 }
