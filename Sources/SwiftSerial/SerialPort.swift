@@ -211,12 +211,12 @@ public class SerialPort {
             throw SerialError.deviceNotConnected
         }
         if fStatReturn != 0 {
-            fatalError("fstat had error:", fStatReturn, errno)
+            fatalError("fstat had error: \(fStatReturn) \(errno)")
         }
 
         let bytesRead = read(fileDescriptor, buffer, count)
         if bytesRead < 0 {
-            fatalError("read had error:", bytesRead, errno)
+            fatalError("read had error: \(bytesRead) \(errno)")
         }
         return max(0, bytesRead)
     }
@@ -260,7 +260,7 @@ public class SerialPort {
         return data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) in
             let returnValue = write(fileDescriptor, ptr.baseAddress, data.count)
             if returnValue != data.count {
-                fatalError("write had error:", returnValue, errno)
+                fatalError("write had error: \(returnValue) \(errno)")
             }
         }
     }
@@ -278,7 +278,7 @@ public class SerialPort {
         return bytes.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) in
             let returnValue = write(fileDescriptor, ptr.baseAddress, bytes.count)
             if returnValue != bytes.count {
-                fatalError("write had error:", returnValue, errno)
+                fatalError("write had error: \(returnValue) \(errno)")
             }
         }
     }
